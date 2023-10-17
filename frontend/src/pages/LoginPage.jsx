@@ -1,45 +1,99 @@
 import React, { useState } from "react";
 import "../css/LoginPage.css";
-import backgrouundImage from "../assets/images/gradient-dark-blue-futuristic-digital-background.jpg";
-import { Link } from "react-router-dom";
+import backgroundImage from "../assets/images/gradient-dark-blue-futuristic-digital-background.jpg";
+import { Link, json, useNavigate } from "react-router-dom";
+import axios from "axios";
 export const LoginPage = () => {
-  const [number, setNumber] = useState(null);
   const [otp, setOtp] = useState(false);
+  const [number, setNumber] = useState(null);
+  const [otpValue, setOtpValue] = useState("");
+  const url = import.meta.env.VITE_APP_Url;
+  const navigate = useNavigate();
+  const handleOtp = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (otp) {
+        console.log(otpValue);
+        axios
+          .post(`${url}/api/v1/verify/login`, {
+            mobileNumber: number,
+            otp: otpValue.otp,
+          })
+          .then((res) => {
+            console.log(res.data);
+            localStorage.setItem("userLogin", true);
+            alert(res.data.message);
+            navigate("/");
+          });
+      } else {
+        axios
+          .post(`${url}/api/v1/login`, {
+            mobileNumber: number,
+          })
+          .then((res) => {
+            setOtp(true);
+            console.log(res.data.error);
+
+            setOtpValue(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+            alert("User Not Found");
+          });
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      alert("An error occurred. Please try again later.");
+    }
+  };
+
   return (
     <div
       style={{
         display: "grid",
         placeItems: "center",
         height: "100vh",
-        backgroundImage: `url(${backgrouundImage})`,
+        backgroundImage: `url(${backgroundImage})`,
       }}
     >
       <div className="container">
         <div className="heading">Sign In</div>
-        <form action="" className="form">
+        <form action="" className="form" onSubmit={handleOtp}>
           <input
             required=""
             className="input"
-            type="email"
+            type="text"
             name="email"
-            id="otp"
-            placeholder="E-mail" onChange={(e) => setNumber(e.target.value)}
+            value={number}
+            id="email"
+            placeholder="Enter Your Mobile Number"
+            onChange={(e) => setNumber(e.target.value)}
           />
+
           <input
             required=""
             className="input"
-            type="password"
+            type="text"
             name="password"
             id="password"
-            placeholder="Password"
+            onChange={(e) => setOtpValue(e.target.value)}
+            disabled={!otp}
+            value={otpValue.otp}
+            placeholder="Enter Otp Code"
           />
           <span className="forgot-password">
-            <Link to={"/signup"}>Already Registered ?</Link>
+            <Link to={"/signup"}>If not Registered ?</Link>
           </span>
-          <input className="login-button" type="submit" value="Sign In" />
+          <input
+            className="login-button"
+            type="submit"
+            value={otpValue ? "Verify" : "Sign In"}
+            style={{ cursor: "pointer" }}
+          />
         </form>
         <div className="social-account-container">
-          <span className="title">Or Sign in with</span>
+          <span className="title">Or Sign In with</span>
           <div className="social-accounts">
             <button className="social-button google">
               <svg

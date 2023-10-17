@@ -1,21 +1,56 @@
 import React, { useState } from "react";
 import "../css/LoginPage.css";
 import backgroundImage from "../assets/images/gradient-dark-blue-futuristic-digital-background.jpg";
-import { Link } from "react-router-dom";
+import { Link, json, useNavigate } from "react-router-dom";
+import axios from "axios";
 export const SignUpPage = () => {
   const [otp, setOtp] = useState(false);
-  const [number,setNumber]=useState(null);
+  const [number, setNumber] = useState(null);
+  const [otpValue, setOtpValue] = useState("");
   const url = import.meta.env.VITE_APP_Url;
-  const handleOtp = (e) => {
+const navigate=useNavigate()
+  const handleOtp = async (e) => {
     e.preventDefault();
-    console.log("working");
-    setOtp(true);
-    console.log(url);
-    axios.post(`${url}/signup`, {
-      email: e.target.email.value,
-      password: e.target.password.value,
-    });
+
+    try {
+      console.log(otpValue);
+      if (otp) {
+        axios
+          .post(`${url}/api/v1/verify/otp`, {
+            mobileNumber: otpValue.mobileNumber,
+            otp: otpValue.otp,
+          })
+          .then((res) => {
+            if (res.data.token) {
+              localStorage.setItem("token", res.data.token);
+              localStorage.setItem("user",otpValue.mobileNumber)
+
+              alert(res.data.message);
+              setOtpValue("");
+              setOtp(false);
+              return navigate("/login")
+            } else {
+              alert("Something Missing");
+            }
+            console.log(otpValue.otp);
+          });
+      } else {
+        axios
+          .post(`${url}/api/v1/register`, {
+            mobileNumber: number,
+          })
+          .then((res) => {
+            setOtp(true);
+            console.log(otp);
+            setOtpValue(res.data.user);
+          });
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      alert("An error occurred. Please try again later.");
+    }
   };
+
   return (
     <div
       style={{
@@ -33,28 +68,30 @@ export const SignUpPage = () => {
             className="input"
             type="text"
             name="email"
+            value={number}
             id="email"
             placeholder="Enter Your Mobile Number"
-            minLength="10"
-            maxLength="10"
+            onChange={(e) => setNumber(e.target.value)}
           />
 
           <input
             required=""
             className="input"
-            type="password"
+            type="text"
             name="password"
             id="password"
+            onChange={(e) => setOtpValue(e.target.value)}
             disabled={!otp}
+            value={otpValue.otp}
             placeholder="Enter Otp Code"
           />
           <span className="forgot-password">
-            <Link to={"/login"}>If you don't have an account ?</Link>
+            <Link to={"/login"}>Already Registered ?</Link>
           </span>
           <input
             className="login-button"
             type="submit"
-            value="Sign Up"
+            value={otpValue ? "Verify" : "Sign Up"}
             style={{ cursor: "pointer" }}
           />
         </form>

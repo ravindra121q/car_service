@@ -7,6 +7,13 @@ import { useNavigate } from "react-router-dom";
 export const HomePage = () => {
   const [textValue, setTextValue] = useState("");
   const navigate = useNavigate();
+  const loginHandler = () => {
+    if (localStorage.getItem.user) {
+      localStorage.removeItem("user");
+    } else {
+      return navigate("/login");
+    }
+  };
   return (
     <div>
       {" "}
@@ -77,9 +84,11 @@ export const HomePage = () => {
                   borderRadius: "5px",
                   textAlign: "center",
                 }}
-                onClick={() => navigate("/login")}
+                onClick={() => {
+                  loginHandler;
+                }}
               >
-                Login
+                {localStorage.getItem.user ? "Login" : "Logout"}
               </button>
             </div>
           </div>
