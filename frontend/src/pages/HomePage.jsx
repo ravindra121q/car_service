@@ -7,13 +7,16 @@ import { useNavigate } from "react-router-dom";
 export const HomePage = () => {
   const [textValue, setTextValue] = useState("");
   const navigate = useNavigate();
+  const isLoggedin = localStorage.getItem("user");
   const loginHandler = () => {
-    if (localStorage.getItem.user) {
+    if (isLoggedin) {
       localStorage.removeItem("user");
     } else {
       return navigate("/login");
     }
   };
+
+  const logoutHandler = () => {};
   return (
     <div>
       {" "}
@@ -85,10 +88,10 @@ export const HomePage = () => {
                   textAlign: "center",
                 }}
                 onClick={() => {
-                  loginHandler;
+                  navigate("/login");
                 }}
               >
-                {localStorage.getItem.user ? "Login" : "Logout"}
+                Login
               </button>
             </div>
           </div>
@@ -158,6 +161,7 @@ export const HomePage = () => {
                 zIndex: "1",
                 padding: "20px",
                 color: "black",
+                cursor: "pointer",
               }}
             >
               <div>
@@ -247,6 +251,7 @@ export const HomePage = () => {
             display: "flex",
             gap: "30px",
             boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+            cursor: "pointer",
           }}
         >
           <Text>Our Services</Text>
@@ -286,6 +291,7 @@ export const HomePage = () => {
           gridTemplateColumns: "repeat(4,1fr)",
           padding: "20px",
           gap: "50px",
+          cursor: "pointer",
 
           borderRadius: "10px",
           marginLeft: "28px",
@@ -423,6 +429,7 @@ export const HomePage = () => {
           marginTop: "50px",
           color: "white ",
           fontSize: "18px",
+          cursor: "pointer",
         }}
       >
         <div
@@ -501,6 +508,7 @@ export const HomePage = () => {
             rowGap: "30px",
             marginLeft: "-38px",
             marginBottom: "30px",
+            cursor: "pointer",
           }}
         >
           <div
@@ -724,6 +732,7 @@ export const HomePage = () => {
             fontSize: "18px",
             width: "829px",
             height: "258px",
+            cursor: "pointer",
           }}
         >
           <div
@@ -817,6 +826,7 @@ export const HomePage = () => {
             columnGap: "20px",
             width: "50%",
             fontSize: "20px",
+            cursor: "pointer",
           }}
         >
           <div
@@ -906,6 +916,7 @@ export const HomePage = () => {
             gridTemplateColumns: "repeat(2,1fr)",
             gap: "20px",
             marginLeft: "28px",
+            cursor: "pointer",
           }}
         >
           <div
