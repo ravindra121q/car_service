@@ -1,5 +1,5 @@
 import { Select, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StarIcon } from "@chakra-ui/icons";
 import image1 from "../assets/images/svgg.jpg";
 import footerImage from "../assets/images/footer.png";
@@ -7,16 +7,23 @@ import { useNavigate } from "react-router-dom";
 export const HomePage = () => {
   const [textValue, setTextValue] = useState("");
   const navigate = useNavigate();
-  const isLoggedin = localStorage.getItem("user");
+  const [isLoggedin, setIsLoggedin] = useState(false);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setIsLoggedin(true);
+    }
+  }, [isLoggedin]);
+
   const loginHandler = () => {
     if (isLoggedin) {
       localStorage.removeItem("user");
+      setIsLoggedin(false); // Update the state.
     } else {
       return navigate("/login");
     }
   };
 
-  const logoutHandler = () => {};
   return (
     <div>
       {" "}
@@ -87,11 +94,9 @@ export const HomePage = () => {
                   borderRadius: "5px",
                   textAlign: "center",
                 }}
-                onClick={() => {
-                  navigate("/login");
-                }}
+                onClick={loginHandler}
               >
-                Login
+                {isLoggedin ? "Logout" : "Login"}
               </button>
             </div>
           </div>
