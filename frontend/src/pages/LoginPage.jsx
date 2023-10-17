@@ -14,7 +14,7 @@ export const LoginPage = () => {
 
     try {
       if (otp) {
-        console.log(otpValue);
+      
         axios
           .post(`${url}/api/v1/verify/login`, {
             mobileNumber: number,
@@ -36,6 +36,7 @@ export const LoginPage = () => {
             console.log(res.data.error);
 
             setOtpValue(res.data);
+
           })
           .catch((err) => {
             console.log(err);

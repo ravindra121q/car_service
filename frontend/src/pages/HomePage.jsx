@@ -9,7 +9,7 @@ export const HomePage = () => {
   const navigate = useNavigate();
   const [isLoggedin, setIsLoggedin] = useState(false);
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = localStorage.getItem("userLogin");
     if (storedUser) {
       setIsLoggedin(true);
     }
@@ -17,8 +17,8 @@ export const HomePage = () => {
 
   const loginHandler = () => {
     if (isLoggedin) {
-      localStorage.removeItem("user");
-      setIsLoggedin(false); // Update the state.
+      localStorage.removeItem("userLogin");
+      setIsLoggedin(false);
     } else {
       return navigate("/login");
     }
